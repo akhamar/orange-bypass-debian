@@ -66,7 +66,7 @@ where `xx:xx:xx:xx:xx:xx` correspond to the MAC addr of LAN interface
 
 ## LAN
 
-> nano /etc/network/interfaces
+> nano /etc/network/interfaces.d/lan
 
 ```bash
 # LAN
@@ -173,7 +173,7 @@ done
 
 ```
 
-> nano /etc/network/interfaces
+> nano /etc/network/interfaces.d/wan
 
 ```bash
 # WAN
