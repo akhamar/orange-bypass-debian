@@ -1,3 +1,8 @@
+> [!warning]
+> All those steps have only been tested on Debian 12
+>
+> You might need to adapt on other distribution or version
+
 # Interface rename
 
 ## WAN
