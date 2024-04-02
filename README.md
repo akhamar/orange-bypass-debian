@@ -516,3 +516,47 @@ net.ipv6.conf.default.accept_ra=2
 > systemctl restart radvd.service
 >
 > systemctl restart nftables.service
+
+
+# Dynamic DNS with DDClient
+
+## Install
+
+> apt install ddclient dh-autoreconf
+
+> [!important] 
+> Clone the lastest version of ddclient if the current version is not at least 3.11.3_0
+> You don't need to clone if ddclient is more up to date
+
+> [!note]
+> Only needed if ddclient is not at least 3.11.3_0
+
+> cd /tmp && git clone https://github.com/ddclient/ddclient.git && cd /tmp/ddclient
+>
+> ./autogen
+>
+> ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+>
+> make
+>
+> make install
+
+## Configuration
+
+> nano /etc/ddclient.conf
+
+> [!note]
+> Example with gandi
+```
+ssl=yes
+force=yes
+
+protocol=gandi
+zone=bbbb.cc
+password=<PASSWORD>
+usev4=ifv4
+usev6=ifv6
+ifv4=vlan832
+ifv6=vlan832
+aaaa.bbbb.cc
+```
