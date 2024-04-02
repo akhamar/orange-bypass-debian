@@ -271,7 +271,6 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 }
 
 
-
 ##################
 #### Lease
 
@@ -330,11 +329,8 @@ subnet6 xxxx:xxxx:xxxx:xxxx::/64 {
 ddns-update-style none;
 
 
-
-
 ##################
 #### Lease
-
 
 # XXXXXX
 host XXXXXX {
