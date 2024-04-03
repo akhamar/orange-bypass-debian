@@ -515,6 +515,34 @@ table ip6 filter {
 }
 ```
 
+> nano /etc/systemd/system/sysinit.target.wants/nftables.service
+
+```bash
+[Unit]
+Description=nftables
+Documentation=man:nft(8) http://wiki.nftables.org
+Wants=network-pre.target
+Before=network-pre.target shutdown.target
+Conflicts=shutdown.target
+DefaultDependencies=no
+StartLimitIntervalSec=30        <<<<<<<<<<
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+StandardInput=null
+ProtectSystem=full
+ProtectHome=true
+ExecStart=/usr/sbin/nft -f /etc/nftables.conf
+ExecReload=/usr/sbin/nft -f /etc/nftables.conf
+ExecStop=/usr/sbin/nft flush ruleset
+Restart=on-failure              <<<<<<<<<<
+
+[Install]
+WantedBy=sysinit.target
+```
+
+
 ## IP forward
 
 > nano /etc/sysctl.conf
