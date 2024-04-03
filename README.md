@@ -515,6 +515,15 @@ table ip6 filter {
 }
 ```
 
+> [!warning]
+> Adding fastpath on nftable explicitely declare lan and vlan832
+>
+> By doing that the service start up could crash when the interface vlan832 is not up yet
+>
+> To mitigate this issue, you can update the systemd service for nftable
+>
+> Adding `Restart=on-failure` and `RestartSec=30` in the section `[Service]` will solve this issue
+
 > nano /etc/systemd/system/sysinit.target.wants/nftables.service
 
 ```bash
@@ -542,6 +551,9 @@ RestartSec=30                   <<<<<<<<<
 [Install]
 WantedBy=sysinit.target
 ```
+
+> systemctl daemon-reload
+> systemctl restart nftables.service
 
 
 ## IP forward
