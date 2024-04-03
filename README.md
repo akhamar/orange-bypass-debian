@@ -525,7 +525,6 @@ Wants=network-pre.target
 Before=network-pre.target shutdown.target
 Conflicts=shutdown.target
 DefaultDependencies=no
-StartLimitIntervalSec=30        <<<<<<<<<<
 
 [Service]
 Type=oneshot
@@ -536,7 +535,9 @@ ProtectHome=true
 ExecStart=/usr/sbin/nft -f /etc/nftables.conf
 ExecReload=/usr/sbin/nft -f /etc/nftables.conf
 ExecStop=/usr/sbin/nft flush ruleset
-Restart=on-failure              <<<<<<<<<<
+Restart=on-failure              <<<<<<<<<
+RestartSec=30                   <<<<<<<<<
+
 
 [Install]
 WantedBy=sysinit.target
