@@ -355,7 +355,9 @@ host YYYYYYY {
 
 ...
 ```
-> replace xxx with proper values
+
+> [!important] 
+> Replace placeholders value with proper values
 
 ## Serveur DHCP IPV6 & Radvd
 
@@ -408,7 +410,9 @@ host YYYYYY {
 
 ...
 ```
-> replace xxx with proper values
+
+> [!important] 
+> Replace placeholders value with proper values
 
 
 > nano /etc/radvd.conf
@@ -452,16 +456,19 @@ interface lan {
 }
 ```
 
+> [!important] 
+> Replace placeholders value with proper values
+
 
 
 ## Tooling
 
-Ajout de la base de données des manufacturer
+Add manufacturer database for MAC address
 > wget http://standards-oui.ieee.org/oui.txt
 >
 > mv oui.txt /usr/local/etc/
 
-Connnaitre les leases actif
+To print out the current ipv4 used lease
 > dhcp-lease-list
 
 # Routing
@@ -481,7 +488,6 @@ flush ruleset
 
 define LAN_IPV4_SUBNET  = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
 define LAN_IPV6_SUBNET  = { xxx:xxx:xxx:xxxx::/64 }
-define LAN_SSH_PORT     = { yyy }
 
 # NAT
 table ip nat {
@@ -576,6 +582,9 @@ table ip6 filter {
         }
 }
 ```
+
+> [!important] 
+> Replace placeholders value with proper values
 
 > [!warning]
 > Adding fastpath on nftable explicitely declare lan and vlan832
@@ -688,3 +697,6 @@ ifv4=vlan832
 ifv6=vlan832
 aaaa.bbbb.cc
 ```
+
+> [!important] 
+> Replace placeholders value with proper values
