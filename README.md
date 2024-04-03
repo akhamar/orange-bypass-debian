@@ -192,6 +192,8 @@ fi
 ### Interface
 
 > nano /etc/network/wait_for_wan
+>
+> chmod 750 /etc/network/wait_for_wan
 
 ```bash
 #!/bin/bash
