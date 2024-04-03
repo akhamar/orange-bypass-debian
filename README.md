@@ -200,6 +200,7 @@ fi
 
 TIMEOUT=120
 
+echo "Waiting for ONU to be UP and running"
 until ip addr show wan | grep -q "state UP"
 do
         sleep 2
@@ -209,6 +210,7 @@ do
                 exit 1
         fi
 done
+echo "ONU UP and running"
 
 ```
 
