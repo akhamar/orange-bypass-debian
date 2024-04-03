@@ -88,6 +88,8 @@ iface lan inet static
 
 LOGIN='fti/XXXXXX'
 PASSWORD='YYYYYY'
+LIVEBOX_VERSION=5
+LIVEBOX_HARDWARE='sagem'
 
 # Forge DHCP option 90
 tohex() {
@@ -102,23 +104,34 @@ r=$(dd if=/dev/urandom bs=1k count=1 2>&1 | md5sum | cut -c1-16)
 id=${r:0:1}
 h=3C12$(tohex ${r})0313$(tohex ${id})$(echo -n ${id}${PASSWORD}${r} | md5sum | cut -c1-32)
 
+# vendor class
+export VENDOR_CLASS_IDENTIFIER_4=${LIVEBOX_HARDWARE}
+export VENDOR_CLASS_IDENTIFIER_6=00:00:04:0e:00:05$(addsep $(tohex ${LIVEBOX_HARDWARE}))
+echo "Vendor class has been generated"
 
+# user class
+export USER_CLASS_4=+FSVDSL_livebox.Internet.softathome.Livebox${LIVEBOX_VERSION}
+export USER_CLASS_6=00$(addsep $(tohex "+FSVDSL_livebox.Internet.softathome.Livebox${LIVEBOX_VERSION}"))
+echo "User class has been generated"
+
+# option 90
 export AUTHENTICATION_STR=00:00:00:00:00:00:00:00:00:00:00:1a:09:00:00:05:58:01:03:41:01:0d$(addsep $(tohex ${LOGIN})${h})
+echo "Option 90 has been generated"
 
 # Generate DHCP client (ivp4 and ivp6) files
 envsubst < /etc/dhcp/dhclient-orange-v4.conf.template > /etc/dhcp/dhclient-orange-v4.conf
 envsubst < /etc/dhcp/dhclient-orange-v6.conf.template > /etc/dhcp/dhclient-orange-v6.conf
-
-echo "Option 90 has been generated"
 ```
 
 > [!important] 
-> Replace `XXXXXX` and `YYYYYY` with the login and password
+> Replace `XXXXXX`, `YYYYYY`, `Livebox version` and `Livebox hardware` with the proper values
 
 
 > nano /etc/dhcp/dhclient-orange-v4.conf.template
 
 ```bash
+# Debug: tcpdump -i wan port 67 or port 68 -e -n -v
+
 # Definition
 option user-class       code 77 = string;
 option authentication   code 90 = string;
@@ -127,11 +140,10 @@ option authentication   code 90 = string;
 send dhcp-parameter-request-list 1, 3, 6, 15, 28, 51, 58, 59, 90, 119, 120, 125;
 # Uncomment for absolutly no Orange domain/dns/server-name related
 #send dhcp-parameter-request-list 1, 3, 28, 51, 58, 59, 90, 120, 125;
-
-send vendor-class-identifier "sagem";
-send dhcp-client-identifier = hardware;                                 # Equivalent to 01:xx:xx:xx:xx:xx:xx but use mac specified on interface (cf. hw-mac-address on iface)
-send user-class "+FSVDSL_livebox.Internet.softathome.Livebox5";
-send authentication $AUTHENTICATION_STR;
+send vendor-class-identifier "${VENDOR_CLASS_IDENTIFIER_4}";
+send dhcp-client-identifier = hardware;                                 # equivalent to 01:xx:xx:xx:xx:xx:xx but use mac specified on interface (cf. hw-mac-address on iface)
+send user-class "${USER_CLASS_4}";
+send authentication ${AUTHENTICATION_STR};
 
 # Uncomment to avoid getting Orange DNS servers
 #supersede domain-name "aaaa.bbbb.cc";
@@ -142,6 +154,8 @@ send authentication $AUTHENTICATION_STR;
 > nano /etc/dhcp/dhclient-orange-v6.conf.template
 
 ```bash
+# Debug: tcpdump -i wan port 546 or port 547 -e -n -v
+
 # Definition
 option dhcp6.vendorclass        code 16 = string;
 option dhcp6.userclass          code 15 = string;
@@ -149,9 +163,9 @@ option dhcp6.auth               code 11 = string;
 
 # Send Option
 # 73:61:67:65:6d == sagem
-send dhcp6.vendorclass 00:00:04:0e:00:05:73:61:67:65:6d;
+send dhcp6.vendorclass ${VENDOR_CLASS_IDENTIFIER_6};
 # 2b:46:53:56:44:53:4c:5f:6c:69:76:65:62:6f:78:2e:49:6e:74:65:72:6e:65:74:2e:73:6f:66:74:61:74:68:6f:6d:65:2e:4c:69:76:65:62:6f:78:35 == "+FSVDSL_livebox.Internet.softathome.Livebox5"
-send dhcp6.userclass 00:2b:46:53:56:44:53:4c:5f:6c:69:76:65:62:6f:78:2e:49:6e:74:65:72:6e:65:74:2e:73:6f:66:74:61:74:68:6f:6d:65:2e:4c:69:76:65:62:6f:78:35;
+send dhcp6.userclass ${USER_CLASS_6};
 # auth str
 send dhcp6.auth $AUTHENTICATION_STR;
 
