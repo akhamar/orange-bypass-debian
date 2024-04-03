@@ -553,6 +553,7 @@ WantedBy=sysinit.target
 ```
 
 > systemctl daemon-reload
+> 
 > systemctl restart nftables.service
 
 
