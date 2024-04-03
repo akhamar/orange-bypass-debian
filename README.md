@@ -220,12 +220,11 @@ do
         sleep 2
         if [[ $SECONDS -ge $TIMEOUT ]]
         then
-                echo "Timeout waiting for ONU module to be UP"
+                echo "Timeout ($TIMEOUT second) waiting for ONU module to be UP"
                 exit 1
         fi
 done
 echo "ONU UP and running"
-
 ```
 
 > nano /etc/network/interfaces.d/wan
