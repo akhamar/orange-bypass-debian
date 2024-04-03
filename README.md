@@ -99,7 +99,7 @@ send authentication 00:00:00:00:00:00:00:00:00:00:00:xx:xx:xx:xx:xx:xx:xx:xx:xx:
 # Uncomment to avoid getting Orange DNS servers
 #supersede domain-name "aaaa.bbbb.cc";
 #supersede domain-search "aaaa.bbbb.cc";
-#supersede domain-name-servers xx.xxx.xxx.xxx;
+#supersede domain-name-servers xxx.xxx.xxx.xxx;
 ```
 
 > nano /etc/dhcp/dhclient-orange-v6.conf
