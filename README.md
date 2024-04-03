@@ -249,7 +249,7 @@ iface vlan832 inet manual
         # Wait for ONU to be UP
         up /etc/network/wait_for_wan
 
-        # Generate Option 90
+        # Generate Orange Options (user-class, vendor-class, option 90)
         up /etc/dhcp/dhclient-orange-generator
 
         # Egress prio 6:6
