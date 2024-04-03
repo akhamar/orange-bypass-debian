@@ -79,7 +79,44 @@ iface lan inet static
 
 ### DHCP
 
-> nano /etc/dhcp/dhclient-orange-v4.conf
+> nano /etc/dhcp/dhclient-orange-generator
+>
+> chmod 750 /etc/dhcp/dhclient-orange-generator
+
+```bash
+#!/bin/bash
+
+LOGIN='fti/XXXXXX'
+PASSWORD='YYYYYY'
+
+# Forge DHCP option 90
+tohex() {
+  for h in $(echo $1 | sed "s/\(.\)/\1 /g"); do printf %02x \'$h; done
+}
+
+addsep() {
+  echo $(echo $1 | sed "s/\(.\)\(.\)/:\1\2/g")
+}
+
+r=$(dd if=/dev/urandom bs=1k count=1 2>&1 | md5sum | cut -c1-16)
+id=${r:0:1}
+h=3C12$(tohex ${r})0313$(tohex ${id})$(echo -n ${id}${PASSWORD}${r} | md5sum | cut -c1-32)
+
+
+export AUTHENTICATION_STR=00:00:00:00:00:00:00:00:00:00:00:1a:09:00:00:05:58:01:03:41:01:0d$(addsep $(tohex ${LOGIN})${h})
+
+# Generate DHCP client (ivp4 and ivp6) files
+envsubst < /etc/dhcp/dhclient-orange-v4.conf.template > /etc/dhcp/dhclient-orange-v4.conf
+envsubst < /etc/dhcp/dhclient-orange-v6.conf.template > /etc/dhcp/dhclient-orange-v6.conf
+
+echo "Option 90 has been generated"
+```
+
+> [!important] 
+> Replace `XXXXXX` and `YYYYYY` with the login and password
+
+
+> nano /etc/dhcp/dhclient-orange-v4.conf.template
 
 ```bash
 # Definition
@@ -94,7 +131,7 @@ send dhcp-parameter-request-list 1, 3, 6, 15, 28, 51, 58, 59, 90, 119, 120, 125;
 send vendor-class-identifier "sagem";
 send dhcp-client-identifier = hardware;                                 # Equivalent to 01:xx:xx:xx:xx:xx:xx but use mac specified on interface (cf. hw-mac-address on iface)
 send user-class "+FSVDSL_livebox.Internet.softathome.Livebox5";
-send authentication 00:00:00:00:00:00:00:00:00:00:00:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx;
+send authentication $AUTHENTICATION_STR;
 
 # Uncomment to avoid getting Orange DNS servers
 #supersede domain-name "aaaa.bbbb.cc";
@@ -102,7 +139,7 @@ send authentication 00:00:00:00:00:00:00:00:00:00:00:xx:xx:xx:xx:xx:xx:xx:xx:xx:
 #supersede domain-name-servers xxx.xxx.xxx.xxx;
 ```
 
-> nano /etc/dhcp/dhclient-orange-v6.conf
+> nano /etc/dhcp/dhclient-orange-v6.conf.template
 
 ```bash
 # Definition
@@ -116,7 +153,7 @@ send dhcp6.vendorclass 00:00:04:0e:00:05:73:61:67:65:6d;
 # 2b:46:53:56:44:53:4c:5f:6c:69:76:65:62:6f:78:2e:49:6e:74:65:72:6e:65:74:2e:73:6f:66:74:61:74:68:6f:6d:65:2e:4c:69:76:65:62:6f:78:35 == "+FSVDSL_livebox.Internet.softathome.Livebox5"
 send dhcp6.userclass 00:2b:46:53:56:44:53:4c:5f:6c:69:76:65:62:6f:78:2e:49:6e:74:65:72:6e:65:74:2e:73:6f:66:74:61:74:68:6f:6d:65:2e:4c:69:76:65:62:6f:78:35;
 # auth str
-send dhcp6.auth 00:00:00:00:00:00:00:00:00:00:00:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx;
+send dhcp6.auth $AUTHENTICATION_STR;
 
 request dhcp6.auth, dhcp6.vendorclass, dhcp6.userclass;
 ```
@@ -185,13 +222,18 @@ iface wan inet manual
 auto vlan832
 allow-hotplug vlan832
 iface vlan832 inet manual
+
         # Bind vlan
         vlan-raw-device wan
+
         # LiveBox mac address
         hw-mac-address xx:xx:xx:xx:xx:xx
 
         # Wait for ONU to be UP
         up /etc/network/wait_for_wan
+
+        # Generate Option 90
+        up /etc/dhcp/dhclient-orange-generator
 
         # Egress prio 6:6
         up ip l s $IFACE type vlan egress 6:6
@@ -215,6 +257,9 @@ iface vlan832 inet manual
         down cgdelete -g net_prio:dhcp-orange
         down umount /sys/fs/cgroup/net_prio 2>/dev/null || true
 ```
+
+> [!important] 
+> Replace `xx:xx:xx:xx:xx:xx` with the Livebox mac address
 
 
 # Serveur DHCP
