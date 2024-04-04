@@ -187,6 +187,7 @@ then
                 interface="${interface_index%:*}"
                 index="${interface_index#*:}"
 
+                echo ""
                 echo "========================="
                 echo "| interface: $interface"
                 echo "========================="
@@ -194,7 +195,6 @@ then
                 echo "| index:  $index"
                 echo "| ipv6:   $prefix$index::1/64"
                 echo "========================="
-                echo ""
 
                 ip -family inet6 address flush dev "$interface" scope global
                 ip -family inet6 address add "$prefix$index::1/64" dev "$interface"
@@ -602,10 +602,12 @@ nft -f /etc/nftables.conf
 # Add flowtable fastpath
 nft add "flowtable ip filter fastpath { hook ingress priority 0; devices = { lan, vlan832 }; }"
 nft add "flowtable ip6 filter fastpath { hook ingress priority 0; devices = { lan, vlan832 }; }"
+echo "flowtable fastpath added to nftable rules"
 
 # Add flowtable usage
 nft insert "rule ip filter forward ct state { related, established } meta l4proto { tcp, udp } flow offload @fastpath;"
 nft insert "rule ip6 filter forward ct state { related, established } meta l4proto { tcp, udp } flow offload @fastpath;"
+echo "flowtable fastpath usage added to nftable rules"
 ```
 > chmod 750 /etc/network/update_nft
 
