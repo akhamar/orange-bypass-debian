@@ -580,6 +580,10 @@ table ip6 filter {
 
 ## Configure nftables with fastpath (optional)
 
+This part is totally optional and doesn't need to be done for the connection to work.
+
+It is more an optimisation (especially for XGS-PON) than anything else.
+
 > [!warning]
 > Adding fastpath on nftable explicitely declare lan and vlan832
 >
