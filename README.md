@@ -525,9 +525,6 @@ table ip nat {
 
 # Filter IPV4
 table ip filter {
-        flowtable fastpath {
-                hook ingress priority 0; devices = { lan, vlan832 };
-        }
         chain input {
                 type filter hook input priority filter; policy drop;
                 iif lo accept
@@ -536,7 +533,6 @@ table ip filter {
         }
         chain forward {
                 type filter hook forward priority filter; policy drop;
-                ct state { related, established } meta l4proto { tcp, udp } flow offload @fastpath
                 ct state { related, established } accept
                 ct state invalid drop
                 iifname "lan" ct state new accept                               # From LAN to WAN (NAT)
@@ -550,9 +546,6 @@ table ip filter {
 
 # Filter IPV6
 table ip6 filter {
-        flowtable fastpath {
-                hook ingress priority 0; devices = { lan, vlan832 };
-        }
         chain input {
                 type filter hook input priority filter; policy drop;
                 iif lo accept
@@ -566,7 +559,6 @@ table ip6 filter {
         }
         chain forward {
                 type filter hook forward priority filter; policy drop;
-                ct state { related, established } meta l4proto { tcp, udp } flow offload @fastpath
                 ct state { related, established } accept
                 ct state invalid drop
                 iifname "lan" ct state new accept
@@ -586,46 +578,62 @@ table ip6 filter {
 > [!important] 
 > Replace placeholders value with proper values
 
+## Configure nftables with fastpath (optional)
+
 > [!warning]
 > Adding fastpath on nftable explicitely declare lan and vlan832
 >
-> By doing that the service start up could crash when the interface vlan832 is not up yet
+> Thus making impossible to load nftable rule that include fastpath unless vlan832 iface is up
 >
-> To mitigate this issue, you can update the systemd service for nftable
->
-> Adding `Restart=on-failure` and `RestartSec=30` in the section `[Service]` will solve this issue
+> To prevent that we will use an update script that add those rules when the vlan832 is up
 
-> nano /etc/systemd/system/sysinit.target.wants/nftables.service
+> nano /etc/network/update_nft
 
 ```bash
-[Unit]
-Description=nftables
-Documentation=man:nft(8) http://wiki.nftables.org
-Wants=network-pre.target
-Before=network-pre.target shutdown.target
-Conflicts=shutdown.target
-DefaultDependencies=no
+#!/bin/bash
 
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-StandardInput=null
-ProtectSystem=full
-ProtectHome=true
-ExecStart=/usr/sbin/nft -f /etc/nftables.conf
-ExecReload=/usr/sbin/nft -f /etc/nftables.conf
-ExecStop=/usr/sbin/nft flush ruleset
-Restart=on-failure              <<<<<<<<<
-RestartSec=30                   <<<<<<<<<
+# Reload nftable
+nft -f /etc/nftables.conf
 
+# Add flowtable fastpath
+nft add "flowtable ip filter fastpath { hook ingress priority 0; devices = { lan, vlan832 }; }"
+nft add "flowtable ip6 filter fastpath { hook ingress priority 0; devices = { lan, vlan832 }; }"
 
-[Install]
-WantedBy=sysinit.target
+# Add flowtable usage
+nft insert "rule ip filter forward ct state { related, established } meta l4proto { tcp, udp } flow offload @fastpath;"
+nft insert "rule ip6 filter forward ct state { related, established } meta l4proto { tcp, udp } flow offload @fastpath;"
 ```
+> chmod 750 /etc/network/update_nft
 
-> systemctl daemon-reload
-> 
-> systemctl restart nftables.service
+Then edit interface WAN
+
+> nano /etc/network/interfaces.d/wan
+
+Add `up /etc/network/update_nft` to `vlan832` interface
+
+```bash
+# VLAN832
+auto vlan832
+allow-hotplug vlan832
+iface vlan832 inet manual
+
+        # Bind vlan
+        vlan-raw-device wan
+
+        # LiveBox mac address
+        hw-mac-address ac:84:c9:0e:f5:e8
+
+        # Wait for ONU to be UP
+        up /etc/network/wait_for_wan
+
+        # Add nftable fastpath rules
+        up /etc/network/update_nft
+
+        # Generate Orange Options (user-class, vendor-class, option 90)
+        up /etc/dhcp/dhclient-orange-generator
+
+...
+```
 
 
 ## IP forward
