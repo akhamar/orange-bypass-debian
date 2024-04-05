@@ -278,6 +278,7 @@ iface vlan832 inet manual
 > Replace `xx:xx:xx:xx:xx:xx` with the Livebox mac address
 
 
+
 # Serveur DHCP
 
 > apt install isc-dhcp-server
@@ -414,6 +415,9 @@ host YYYYYY {
 > Replace placeholders value with proper values
 
 
+
+# Radvd
+
 > nano /etc/radvd.conf
 
 ```bash
@@ -460,7 +464,7 @@ interface lan {
 
 
 
-## Tooling
+# Tooling
 
 Add manufacturer database for MAC address
 > wget http://standards-oui.ieee.org/oui.txt
@@ -469,6 +473,8 @@ Add manufacturer database for MAC address
 
 To print out the current ipv4 used lease
 > dhcp-lease-list
+
+
 
 # Routing
 
@@ -757,3 +763,21 @@ aaaa.bbbb.cc
 
 > [!important] 
 > Replace placeholders value with proper values
+
+# Debug
+
+## NFtable
+
+> conntrack -L
+>
+> conntrack -L | grep OFFLOAD
+>
+> nft -a list ruleset
+>
+> nft monitor trace
+
+## DHCP
+
+> tcpdump -i wan port 67 or port 68 -e -n -v
+> 
+> tcpdump -i wan port 546 or port 547 -e -n -v
