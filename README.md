@@ -641,6 +641,44 @@ iface vlan832 inet manual
 ...
 ```
 
+## Configure nftables with trace (optional / debug)
+
+### Inject trace rules
+
+> nano /etc/network/inject_trace_nft
+
+```bash
+#!/bin/bash
+
+# Inject chain
+nft add "chain ip nat trace_chain { type filter hook prerouting priority -1; }"
+nft add "chain ip filter trace_chain { type filter hook prerouting priority -1; }"
+nft add "chain ip6 filter trace_chain { type filter hook prerouting priority -1; }"
+echo "chain trace injected"
+
+# Inject trace rules
+nft add "rule ip nat trace_chain meta nftrace set 1"
+nft add "rule ip filter trace_chain meta nftrace set 1"
+nft add "rule ip6 filter trace_chain meta nftrace set 1"
+echo "trace injected"
+```
+
+> nft monitor trace
+
+### Remove trace rules
+
+> nano /etc/network/remove_trace_nft
+
+```bash
+#!/bin/bash
+
+# Remove trace rules
+nft delete chain ip nat trace_chain
+nft delete chain ip filter trace_chain
+nft delete chain ip6 filter trace_chain
+echo "chain trace removed"
+```
+
 
 ## IP forward
 
