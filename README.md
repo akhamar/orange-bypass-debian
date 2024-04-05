@@ -486,7 +486,7 @@ To print out the current ipv4 used lease
 flush ruleset
 
 define LAN_IPV4_SUBNET  = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
-define LAN_IPV6_SUBNET  = { xxxx:xxx:xxx:xxxx::/64 }
+define LAN_IPV6_SUBNET  = { xxxx:xxxx:xxxx:xxxx::/64 }
 
 # NAT
 table ip nat {
