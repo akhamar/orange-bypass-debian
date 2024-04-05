@@ -38,7 +38,7 @@ where `xx:xx:xx:xx:xx:xx` correspond to the MAC addr of LAN interface
 
 ## Necessary package
 
-> apt install git curl zsh htop ethtool tcpdump net-tools iproute2 vlan cgroup-tools isc-dhcp-server radvd
+> apt install git curl zsh htop ethtool tcpdump conntrack net-tools iproute2 vlan cgroup-tools isc-dhcp-server radvd
 >
 > sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
