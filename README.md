@@ -80,8 +80,6 @@ iface lan inet static
 ### DHCP
 
 > nano /etc/dhcp/dhclient-orange-generator
->
-> chmod 750 /etc/dhcp/dhclient-orange-generator
 
 ```bash
 #!/bin/bash
@@ -126,6 +124,7 @@ envsubst < /etc/dhcp/dhclient-orange-v6.conf.template > /etc/dhcp/dhclient-orang
 > [!important] 
 > Replace `XXXXXX`, `YYYYYY`, `Livebox version` and `Livebox hardware` with the proper values
 
+> chmod 750 /etc/dhcp/dhclient-orange-generator
 
 > nano /etc/dhcp/dhclient-orange-v4.conf.template
 
@@ -201,13 +200,12 @@ then
         done
 fi
 ```
+> chmod 750 /etc/dhcp/dhclient-enter-hooks.d/ipv6-internal
 
 
 ### Interface
 
 > nano /etc/network/wait_for_wan
->
-> chmod 750 /etc/network/wait_for_wan
 
 ```bash
 #!/bin/bash
@@ -226,6 +224,7 @@ do
 done
 echo "ONU UP and running"
 ```
+> chmod 750 /etc/network/wait_for_wan
 
 > nano /etc/network/interfaces.d/wan
 
@@ -453,7 +452,7 @@ interface lan {
         DNSSL aaaa.bbbb.cc {
         };
 
-}
+};
 ```
 
 > [!important] 
@@ -662,6 +661,7 @@ nft add "rule ip filter trace_chain meta nftrace set 1"
 nft add "rule ip6 filter trace_chain meta nftrace set 1"
 echo "trace injected"
 ```
+> chmod 750 /etc/network/inject_trace_nft
 
 > /etc/network/inject_trace_nft
 >
@@ -680,6 +680,8 @@ nft delete chain ip filter trace_chain
 nft delete chain ip6 filter trace_chain
 echo "chain trace removed"
 ```
+> chmod 750 /etc/network/remove_trace_nft
+
 > /etc/network/remove_trace_nft
 
 
