@@ -609,13 +609,13 @@ nft insert "rule ip filter forward ct state { related, established } meta l4prot
 nft insert "rule ip6 filter forward ct state { related, established } meta l4proto { tcp, udp } flow offload @fastpath;"
 echo "flowtable fastpath usage added to nftable rules"
 ```
-> chmod 750 /etc/network/update_nft
+> chmod 750 /etc/network/inject_flowtable_fastpath
 
 Then edit interface WAN
 
 > nano /etc/network/interfaces.d/wan
 
-Add `up /etc/network/update_nft` to `vlan832` interface
+Add `up /etc/network/inject_flowtable_fastpath` to `vlan832` interface
 
 ```bash
 # VLAN832
