@@ -39,26 +39,10 @@ where `xx:xx:xx:xx:xx:xx` correspond to the MAC addr of LAN interface
 ## Necessary package
 
 > apt install git curl zsh htop rsyslog ethtool tcpdump conntrack net-tools iproute2 vlan cgroup-tools isc-dhcp-server radvd
->
+
+## Oh-My-Zsh (Optional)
+
 > sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-
-## BMC (optional)
-
-> [!important] 
-> All commandes are necessary
-
-> apt install firmware-bnx2x dkms
->
-> curl https://raw.githubusercontent.com/JAMESMTL/snippets/master/bnx2x/patches/dkms-init.sh | sudo sh | sudo tee /usr/src/dkms-init.log
->
-> curl https://raw.githubusercontent.com/JAMESMTL/snippets/master/bnx2x/patches/dkms-update.sh | sudo sh | sudo tee /usr/src/dkms-update.log
->
-> apt remove firmware-bnx2x
->
-> curl https://raw.githubusercontent.com/JAMESMTL/snippets/master/bnx2x/patches/dkms-init.sh | sudo sh | sudo tee /usr/src/dkms-init.log
->
-> apt install firmware-bnx2x
 
 
 
@@ -781,3 +765,22 @@ aaaa.bbbb.cc
 > tcpdump -i wan port 67 or port 68 -e -n -v
 > 
 > tcpdump -i wan port 546 or port 547 -e -n -v
+
+
+
+# BMC / BCM57810 (optional)
+
+> [!important] 
+> All commandes are necessary
+
+> apt install firmware-bnx2x dkms
+>
+> curl https://raw.githubusercontent.com/JAMESMTL/snippets/master/bnx2x/patches/dkms-init.sh | sudo sh | sudo tee /usr/src/dkms-init.log
+>
+> curl https://raw.githubusercontent.com/JAMESMTL/snippets/master/bnx2x/patches/dkms-update.sh | sudo sh | sudo tee /usr/src/dkms-update.log
+>
+> apt remove firmware-bnx2x
+>
+> curl https://raw.githubusercontent.com/JAMESMTL/snippets/master/bnx2x/patches/dkms-init.sh | sudo sh | sudo tee /usr/src/dkms-init.log
+>
+> apt install firmware-bnx2x
