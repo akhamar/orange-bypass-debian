@@ -663,6 +663,8 @@ nft add "rule ip6 filter trace_chain meta nftrace set 1"
 echo "trace injected"
 ```
 
+> /etc/network/inject_trace_nft
+>
 > nft monitor trace
 
 ### Remove trace rules
@@ -678,6 +680,7 @@ nft delete chain ip filter trace_chain
 nft delete chain ip6 filter trace_chain
 echo "chain trace removed"
 ```
+> /etc/network/remove_trace_nft
 
 
 ## IP forward
