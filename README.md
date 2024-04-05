@@ -591,7 +591,7 @@ It is more an optimisation (especially for XGS-PON) than anything else.
 >
 > To prevent that we will use an update script that add those rules when the vlan832 is up
 
-> nano /etc/network/update_nft
+> nano /etc/network/inject_flowtable_fastpath
 
 ```bash
 #!/bin/bash
@@ -633,7 +633,7 @@ iface vlan832 inet manual
         up /etc/network/wait_for_wan
 
         # Add nftable fastpath rules
-        up /etc/network/update_nft
+        up /etc/network/inject_flowtable_fastpath
 
         # Generate Orange Options (user-class, vendor-class, option 90)
         up /etc/dhcp/dhclient-orange-generator
