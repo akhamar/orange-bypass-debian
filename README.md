@@ -708,7 +708,8 @@ net.ipv6.conf.default.accept_ra=2
 > systemctl restart nftables.service
 
 
-# Dynamic DNS with DDClient
+
+# Dynamic DNS with DDClient (optional)
 
 ## Install
 
@@ -753,6 +754,42 @@ aaaa.bbbb.cc
 
 > [!important] 
 > Replace placeholders value with proper values
+
+
+
+# VerNum activated on startup (optional)
+
+> nano /usr/local/bin/numlock
+
+```bash
+#!/bin/bash
+
+for tty in /dev/tty{1..6}
+do
+    /usr/bin/setleds -D +num < "$tty";
+done
+```
+
+> chmod 755 /usr/local/bin/numlock
+
+> nano /etc/systemd/system/numlock.service
+
+```bash
+[Unit]
+Description=numlock
+
+[Service]
+ExecStart=/usr/local/bin/numlock
+StandardInput=tty
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+```
+
+> systemctl enable numlock.service
+
+
 
 # Debug
 
