@@ -36,9 +36,15 @@ where `xx:xx:xx:xx:xx:xx` correspond to the MAC addr of LAN interface
 
 # Tooling & drivers
 
-## Necessary package
+## Necessary packages
 
 > apt install git curl zsh htop rsyslog ethtool tcpdump conntrack net-tools iproute2 vlan cgroup-tools isc-dhcp-server radvd
+
+## Optional packages
+
+In UEFI it seem plymouth is not installed. It show Starting service [OK] / [Failed] on startup.
+
+> apt install plymouth
 
 ## Oh-My-Zsh (Optional)
 
