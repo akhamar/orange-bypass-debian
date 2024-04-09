@@ -187,6 +187,16 @@ then
 
                 ip -family inet6 address flush dev "$interface" scope global
                 ip -family inet6 address add "$prefix$index::1/64" dev "$interface"
+
+                # Automatically associate a subnet6 corresponding to lan IVP6 address subnet
+                if [ "$interface" = "lan" ]
+                then
+                        export IPV6_DELEGATION_64=$prefix$index
+                        echo ""
+                        echo "*************************"
+                        echo "* Configuring isch-dhcp-server IPV6 delegation for subnet6=$IPV6_DELEGATION_64"
+                        envsubst < /etc/dhcp/dhcpd6.conf.template > /etc/dhcp/dhcpd6.conf
+                fi
         done
 fi
 ```
@@ -351,7 +361,7 @@ host YYYYYYY {
 
 ## Serveur DHCP IPV6 & Radvd
 
-> nano /etc/dhcp/dhcpd6.conf
+> nano /etc/dhcp/dhcpd6.conf.template
 
 ```bash
 ##################
@@ -372,12 +382,12 @@ update-conflict-detection false;
 authoritative;
 
 # Subnet
-subnet6 xxxx:xxxx:xxxx:xxxx::/64 {
+subnet6 ${IPV6_DELEGATION_64}::/64 {
   # Invite pool range
-  range6 xxxx:xxxx:xxxx:xxxx::aaaa xxxx:xxxx:xxxx:xxxx::bbbb;
+  range6 ${IPV6_DELEGATION_64}::aaaa ${IPV6_DELEGATION_64}::bbbb;
 
   # DNS
-  option dhcp6.name-servers xxxx:xxxx:xxxx:xxxx::dddd;
+  option dhcp6.name-servers ${IPV6_DELEGATION_64}::dddd;
 }
 
 ddns-update-style none;
@@ -389,13 +399,13 @@ ddns-update-style none;
 # XXXXXX
 host XXXXXX {
   host-identifier option dhcp6.client-id xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx;
-  fixed-address6 xxxx:xxxx:xxxx:xxxx::eeee;
+  fixed-address6 ${IPV6_DELEGATION_64}::eeee;
 }
 
 # YYYYYY
 host YYYYYY {
   host-identifier option dhcp6.client-id xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx;
-  fixed-address6 xxxx:xxxx:xxxx:xxxx::ffff;
+  fixed-address6 ${IPV6_DELEGATION_64}::ffff;
 }
 
 ...
