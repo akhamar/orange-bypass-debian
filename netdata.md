@@ -45,12 +45,24 @@ volumes:
 
 ## Config
 
+### Auto update
+
 > crontab -e
 
 ```bash
 # each two days
 0 0 */2 * * cd /opt/netdata && docker compose pull && docker compose up --force-recreate --build -d > /var/log/netdata_update.log 2>&1
 ```
+
+### netdata config
+
+> nano /opt/netdata/netdataconfig/netdata.conf
+
+```bash
+[web]
+default port = 80
+```
+
 
 
 
