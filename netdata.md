@@ -63,6 +63,15 @@ volumes:
 default port = 80
 ```
 
+> nano /opt/netdata/netdataconfig/go.d/prometheus.conf
+
+```bash
+jobs:
+  - name: netfilter
+    url: 'http://127.0.0.1:9630/metrics'
+
+```
+
 
 
 
