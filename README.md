@@ -3,6 +3,10 @@
 >
 > You might need to adapt on other distribution or version
 
+You will find a more detailled version of the nftable configuration [here](nftable.md)
+
+There is also a guide to add netdata (monitoring) [here](netdata.md)
+
 # Interface rename
 
 ## WAN
