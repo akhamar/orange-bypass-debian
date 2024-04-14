@@ -283,7 +283,7 @@ iface vlan832 inet manual
 
 
 
-# Serveur DHCP
+# DHCP server
 
 > apt install isc-dhcp-server
 
@@ -294,7 +294,7 @@ INTERFACESv4="lan"
 INTERFACESv6="lan"
 ```
 
-## Serveur DHCP IPV4
+## DHCP IPV4 server
 
 > nano /etc/dhcp/dhcpd.conf
 
@@ -363,7 +363,7 @@ host YYYYYYY {
 > [!important] 
 > Replace placeholders value with proper values
 
-## Serveur DHCP IPV6 & Radvd
+## DHCP IPV6 server & Radvd
 
 > nano /etc/dhcp/dhcpd6.conf.template
 
