@@ -9,7 +9,7 @@ has_toc: false
 
 # Interfaces configuration (WAN)
 
-## DHCP
+## DHCP Client
 
 ### DHCP Orange option generator
 
@@ -60,7 +60,7 @@ envsubst < /etc/dhcp/dhclient-orange-v6.conf.template > /etc/dhcp/dhclient-orang
 
 `chmod 750 /etc/dhcp/dhclient-orange-generator`
 
-### DHCP IPV4
+### DHCP Client IPV4
 
 `nano /etc/dhcp/dhclient-orange-v4.conf.template`
 
@@ -86,7 +86,7 @@ send authentication ${AUTHENTICATION_STR};
 #supersede domain-name-servers xxx.xxx.xxx.xxx;
 ```
 
-### DHCP IPV6
+### DHCP Client IPV6
 
 `nano /etc/dhcp/dhclient-orange-v6.conf.template`
 
@@ -109,7 +109,7 @@ send dhcp6.auth $AUTHENTICATION_STR;
 request dhcp6.auth, dhcp6.vendorclass, dhcp6.userclass;
 ```
 
-### DHCP IPV6 Subnet allocation
+### DHCP Client IPV6 Subnet allocation
 
 `nano /etc/dhcp/dhclient-enter-hooks.d/ipv6-internal`
 
