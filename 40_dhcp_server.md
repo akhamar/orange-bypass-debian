@@ -8,7 +8,7 @@ has_toc: false
 
 # DHCP Server
 
-# DHCP Server binding
+## DHCP IPV4 & IPV6 Server binding
 
 `nano /etc/default/isc-dhcp-server`
 
