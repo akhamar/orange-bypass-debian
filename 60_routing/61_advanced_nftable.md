@@ -9,6 +9,12 @@ has_toc: false
 
 # NFTABLE
 
+This optional part replace the files created for nftable:
+- /etc/nftables.conf
+- /etc/network/inject_flowtable_fastpath
+- /etc/network/inject_trace_nft
+- /etc/network/remove_trace_nft
+
 ## Main configuration (with counter and comment)
 
 `nano /etc/nftables.conf`
@@ -186,21 +192,6 @@ echo "trace injected"
 `nano /etc/network/remove_trace_nft`
 
 ```bash
-#!/bin/bash
-
-# Inject chain
-nft add "chain ip nat trace_chain { type filter hook prerouting priority -1; }"
-nft add "chain ip filter4 trace_chain { type filter hook prerouting priority -1; }"
-nft add "chain ip6 filter6 trace_chain { type filter hook prerouting priority -1; }"
-echo "chain trace injected"
-
-# Inject trace rules
-nft add "rule ip nat trace_chain meta nftrace set 1"
-nft add "rule ip filter4 trace_chain meta nftrace set 1"
-nft add "rule ip6 filter6 trace_chain meta nftrace set 1"
-echo "trace injected"
-root@hercules:/opt/netdata
- $ cat /etc/network/remove_trace_nft
 #!/bin/bash
 
 # Remove trace rules
