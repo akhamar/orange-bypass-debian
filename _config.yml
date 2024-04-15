@@ -6,8 +6,8 @@ url: https://akhamar.github.io/orange-bypass-debian/
 
 favicon_ico: "/assets/images/logo.png"
 
-color_scheme: dark
-#color_scheme: wider
+#color_scheme: dark
+color_scheme: widerdark
 
 aux_links:
   Main github: https://github.com/akhamar/orange-bypass-debian
