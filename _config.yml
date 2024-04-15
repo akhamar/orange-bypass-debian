@@ -4,10 +4,9 @@ theme: just-the-docs
 
 url: https://akhamar.github.io/orange-bypass-debian/
 
-#logo: "/assets/images/logo.png"
 favicon_ico: "/assets/images/logo.png"
 
 color_scheme: dark
 
 aux_links:
-  Template Repository: https://github.com/just-the-docs/just-the-docs-template
+  Main github: https://github.com/akhamar/orange-bypass-debian
