@@ -10,3 +10,16 @@ color_scheme: dark
 
 aux_links:
   Main github: https://github.com/akhamar/orange-bypass-debian
+
+
+callouts:
+  warning:
+    title: Warning
+    color: orange
+  info:
+    title: Info
+    color: blue
+  important:
+    title: Important
+    color: purple
+  
