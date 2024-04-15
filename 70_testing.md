@@ -10,6 +10,6 @@ has_toc: false
 
 `ifdown vlan832 && ifup vlan832`
 
-`systemctl restart isc-dhcp-server.service radvd.service nftables.service systemctl restart`
+`systemctl restart isc-dhcp-server.service radvd.service nftables.service`
 
-`systemctl status isc-dhcp-server.service radvd.service nftables.service systemctl restart`
+`systemctl status isc-dhcp-server.service radvd.service nftables.service`
