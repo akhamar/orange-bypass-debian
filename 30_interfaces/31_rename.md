@@ -1,13 +1,13 @@
 ---
 layout: default 
-title: Interfaces rename
+title: Interfaces renaming
 parent: Interfaces
 has_children: false
 nav_order: 31
 has_toc: false
 ---
 
-# Interface rename
+# Interfaces renaming
 
 ## WAN
 
