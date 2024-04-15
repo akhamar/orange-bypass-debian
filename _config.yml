@@ -16,11 +16,11 @@ aux_links:
 callouts:
   warning:
     title: Warning
-    color: orange
+    color: red-100
   info:
     title: Info
     color: blue
   important:
     title: Important
-    color: purple
+    color: purple-100
   
