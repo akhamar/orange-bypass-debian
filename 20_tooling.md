@@ -10,7 +10,7 @@ has_toc: false
 
 ## Necessary packages
 
-> apt install htop rsyslog ethtool tcpdump conntrack net-tools iproute2 vlan cgroup-tools isc-dhcp-server radvd
+`apt install htop rsyslog ethtool tcpdump conntrack net-tools iproute2 vlan cgroup-tools isc-dhcp-server radvd`
 
 ## Plymouth (Optional)
 
@@ -18,10 +18,10 @@ On debian UEFI and only console (no UI), it seem plymouth is not installed. Plym
 
 It an usefull package to see what's going on on startup.
 
-> apt install plymouth
+`apt install plymouth`
 
 ## Oh-My-Zsh (Optional)
 
-> apt install git curl zsh
->
-> sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+`apt install git curl zsh`
+
+`sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
