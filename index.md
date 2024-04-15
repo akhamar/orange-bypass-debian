@@ -5,7 +5,7 @@ layout: home
 
 This guide purpose, is to explain and show how to configure a Debian distribution to serve as a router, fully replacing a Livebox from Orange (ISP).
 
-{: .warning }
+{: .important }
 > All those steps have only been tested on Debian 12.
 >
 > You might need to adapt on other distribution or version.
