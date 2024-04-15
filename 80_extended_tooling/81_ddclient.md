@@ -15,6 +15,7 @@ has_toc: false
 
 {: .important }
 > Clone the lastest version of ddclient if the current version is not at least 3.11.3_0
+>
 > You don't need to clone if ddclient is more up to date
 
 {: .info }
