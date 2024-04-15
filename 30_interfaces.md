@@ -3,6 +3,7 @@ layout: default
 title: Interfaces
 has_children: true
 nav_order: 30
+has_toc: false
 ---
 
 # Interfaces
