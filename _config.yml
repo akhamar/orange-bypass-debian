@@ -1,8 +1,13 @@
-title: Just the Docs Template
-description: A starter template for a Jeykll site using the Just the Docs theme!
+title: Orange bypass on Debian
+description: Bypass orange livebox using a Debian router with a dual stack (IPV4 & IPV6 availability).
 theme: just-the-docs
 
-url: https://just-the-docs.github.io
+url: https://akhamar.github.io/orange-bypass-debian/
+
+logo: "/assets/images/logo.png"
+favicon_ico: "/assets/images/favicon.ico"
+
+color_scheme: dark
 
 aux_links:
   Template Repository: https://github.com/just-the-docs/just-the-docs-template
