@@ -1,13 +1,13 @@
 ---
 layout: default 
-title: DHCP Server - Tooling
+title: DHCP Server - Tooling (Optional)
 parent: DHCP Server
 has_children: false
 nav_order: 41
 has_toc: false
 ---
 
-# Tooling
+# DHCP Server - Tooling (Optional)
 
 Add manufacturer database for MAC address
 
