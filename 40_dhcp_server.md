@@ -1,7 +1,7 @@
 ---
 layout: default 
 title: DHCP Server
-has_children: false
+has_children: true
 nav_order: 40
 has_toc: false
 ---

@@ -1,0 +1,18 @@
+---
+layout: default 
+title: DHCP Server - Tooling
+parent: DHCP Server
+has_children: false
+nav_order: 33
+has_toc: false
+---
+
+# Tooling
+
+Add manufacturer database for MAC address
+`wget http://standards-oui.ieee.org/oui.txt`
+
+`mv oui.txt /usr/local/etc/`
+
+To print out the current ipv4 used lease
+`dhcp-lease-list`
