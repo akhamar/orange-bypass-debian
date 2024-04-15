@@ -4,8 +4,8 @@ theme: just-the-docs
 
 url: https://akhamar.github.io/orange-bypass-debian/
 
-logo: "/assets/images/logo.png"
-favicon_ico: "/assets/images/favicon.ico"
+#logo: "/assets/images/logo.png"
+favicon_ico: "/assets/images/logo.png"
 
 color_scheme: dark
 
