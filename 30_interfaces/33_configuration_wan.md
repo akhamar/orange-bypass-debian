@@ -56,7 +56,7 @@ envsubst < /etc/dhcp/dhclient-orange-v6.conf.template > /etc/dhcp/dhclient-orang
 ```
 
 {: .important }
-> Replace `XXXXXX`, `YYYYYY`, `Livebox version` and `Livebox hardware` with the proper values
+> Replace `XXXXXX`, `YYYYYY`, `Livebox version` and `Livebox hardware` with the proper values.
 
 `chmod 750 /etc/dhcp/dhclient-orange-generator`
 
@@ -231,4 +231,4 @@ iface vlan832 inet manual
 ```
 
 {: .important }
-> Replace `xx:xx:xx:xx:xx:xx` with the Livebox mac address
+> Replace `xx:xx:xx:xx:xx:xx` with the Livebox mac address.

@@ -84,7 +84,7 @@ host YYYYYYY {
 ```
 
 {: .important }
-> Replace placeholders value with proper values
+> Replace placeholders value with proper values.
 
 ## DHCP IPV6 Server
 
@@ -139,4 +139,4 @@ host YYYYYY {
 ```
 
 {: .important }
-> Replace placeholders value with proper values
+> Replace placeholders value with proper values.

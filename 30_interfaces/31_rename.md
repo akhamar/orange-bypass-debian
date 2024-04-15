@@ -20,7 +20,7 @@ MACAddress=xx:xx:xx:xx:xx:xx
 [Link]
 Name=wan
 ```
-where `xx:xx:xx:xx:xx:xx` correspond to the MAC addr of WAN interface
+where `xx:xx:xx:xx:xx:xx` correspond to the MAC addr of WAN interface.
 
 
 ## LAN
@@ -34,4 +34,4 @@ MACAddress=xx:xx:xx:xx:xx:xx
 [Link]
 Name=lan
 ```
-where `xx:xx:xx:xx:xx:xx` correspond to the MAC addr of LAN interface
+where `xx:xx:xx:xx:xx:xx` correspond to the MAC addr of LAN interface.
