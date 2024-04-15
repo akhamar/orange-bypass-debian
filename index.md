@@ -1,6 +1,8 @@
 ---
-title: Home
 layout: home
+title: Home
+has_children: false
+nav_order: 10
 ---
 
 This guide purpose, is to explain and show how to configure a Debian distribution to serve as a router, fully replacing a Livebox from Orange (ISP).
