@@ -10,9 +10,11 @@ has_toc: false
 # Tooling
 
 Add manufacturer database for MAC address
+
 `wget http://standards-oui.ieee.org/oui.txt`
 
 `mv oui.txt /usr/local/etc/`
 
 To print out the current ipv4 used lease
+
 `dhcp-lease-list`
