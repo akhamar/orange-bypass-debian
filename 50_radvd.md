@@ -6,6 +6,8 @@ nav_order: 50
 has_toc: false
 ---
 
+# RADVD
+
 `nano /etc/radvd.conf`
 
 ```bash

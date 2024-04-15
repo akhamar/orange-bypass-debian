@@ -15,12 +15,12 @@ aux_links:
 
 callouts:
   warning:
-    title: Warning
+    title: /!\ Warning
     color: red
   info:
-    title: Info
+    #title: ! Info
     color: blue
   important:
-    title: Important
+    title: !! Important
     color: yellow
   
