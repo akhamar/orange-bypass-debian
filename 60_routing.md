@@ -1,7 +1,7 @@
 ---
 layout: default 
 title: Routing
-has_children: false
+has_children: true
 nav_order: 60
 has_toc: false
 ---
