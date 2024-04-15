@@ -21,6 +21,6 @@ callouts:
     #title: ! Info
     color: blue
   important:
-    title: !! Important
+    title: \!! Important
     color: yellow
   
