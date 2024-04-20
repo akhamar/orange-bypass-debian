@@ -88,9 +88,9 @@ jobs:
 ```
 cd /opt/netdata-exporters/nftables
 
-wget https://github.com/USA-RedDragon/nftables_exporter/releases/download/v0.2.0/nftables_exporter-linux-amd64
+wget https://github.com/metal-stack/nftables-exporter/releases/download/v0.2.9/nftables-exporter
 
-mv /opt/netdata-exporters/nftables/nftables_exporter-linux-amd64 /opt/netdata-exporters/nftables/nftables_exporter
+mv /opt/netdata-exporters/nftables/nftables-exporter /opt/netdata-exporters/nftables/nftables_exporter
 
 chmod 750 /opt/netdata-exporters/nftables/nftables_exporter
 ```
