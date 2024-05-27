@@ -24,3 +24,10 @@ callouts:
     title: \!! Important
     color: yellow
   
+
+# Google Analytics Tracking (optional)
+# Supports a CSV of tracking ID strings (eg. "UA-1234567-89,G-1AB234CDE5")
+# Note: the main Just the Docs site does *not* use Google Analytics.
+ga_tracking: G-XCGZR22WRB
+ga_tracking_anonymize_ip: true # Use GDPR compliant Google Analytics settings (true/nil by default)
+  
