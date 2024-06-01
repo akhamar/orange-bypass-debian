@@ -156,6 +156,9 @@ fi
 
 ## Interface
 
+{: .info }
+> Only one of the two following methods, to wait the ONU, is needed.
+
 ### Wait for ONU Up link (version for *XGS-ONU-25-20NI*)
 
 `nano /etc/network/wait_for_wan`
