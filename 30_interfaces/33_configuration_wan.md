@@ -156,7 +156,7 @@ fi
 
 ## Interface
 
-### Wait for ONU Up link
+### Wait for ONU Up link (version for *XGS-ONU-25-20NI*)
 
 `nano /etc/network/wait_for_wan`
 
@@ -167,6 +167,42 @@ TIMEOUT=120
 
 echo "Waiting for ONU to be UP and running"
 until ip addr show wan | grep -q "state UP"
+do
+        sleep 2
+        if [[ $SECONDS -ge $TIMEOUT ]]
+        then
+                echo "Timeout ($TIMEOUT second) waiting for ONU module to be UP"
+                exit 1
+        fi
+done
+echo "ONU UP and running"
+```
+
+`chmod 750 /etc/network/wait_for_wan`
+
+### Wait for ONU Up link (version for *WAS-110*)
+
+`nano /etc/network/wait_for_wan`
+
+```bash
+#!/bin/bash
+
+IFACE=$1
+TIMEOUT=$2
+
+if [[ -z $IFACE ]]
+then
+        echo "IFACE need to be set"
+        exit 1
+fi
+
+if [[ -z $TIMEOUT ]]
+then
+        TIMEOUT=120
+fi
+
+echo "Waiting for ONU to be UP and running"
+until [[ $(ethtool -m $IFACE | grep -E 'Laser output power\s+:' | awk '{print $(NF - 1)}' | cut -d'.' -f1) -gt 0 ]]
 do
         sleep 2
         if [[ $SECONDS -ge $TIMEOUT ]]
