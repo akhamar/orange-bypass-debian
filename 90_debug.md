@@ -36,3 +36,17 @@ tcpdump -vvvv -ttt -i <X_IFACE_NAME_X> 'icmp6 and (ip6[40] = 134 or ip6[40] = 13
 > 133 : router solicitation
 > 
 > 134 : router advertisement
+
+### Main ICMP6
+```bash
+tcpdump -vvvvv -ttt -i wan 'icmp6 and (ip6[40] = 134 or ip6[40] = 133 or ip6[40] = 135 or ip6[40] = 136 or ip6[40] = 129 or ip6[40] = 128 or ip6[40] = 3 or ip6[40] = 2 or ip6[40] = 1)'
+```
+- unreachable: 1
+- too-big: 2
+- time-exceeded: 3
+- echo-request: 128
+- echo-reply: 129
+- router-solicitation: 133
+- router-advertisement: 134
+- neighbor-solicitation: 135
+- neighbor-advertisement: 136
