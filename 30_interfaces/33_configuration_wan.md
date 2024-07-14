@@ -233,6 +233,28 @@ echo "ONU UP and running"
 
 `chmod 750 /etc/network/wait_for_wan`
 
+### Handling COS6 (802.1Q prio 6) and DSCP cs6 for Orange
+
+`nano /etc/network/inject_pcp_6`
+
+```bash
+#!/bin/bash
+
+# Add PCP 6 (802.1Q prio 6)
+nft add "table netdev filter"
+nft add "chain netdev filter egress { type filter hook egress device $IFACE priority 0; }"
+
+# IPV4
+nft insert "rule netdev filter egress udp dport 67 meta priority set 0:6 ip dscp set cs6 comment \"Set CoS value to 6 for DHCPv4 packets\""
+nft insert "rule netdev filter egress ether type arp meta priority set 0:6 comment \"Set CoS value to 6 for arp packets\""
+
+# IPV6
+nft insert "rule netdev filter egress udp dport 547 meta priority set 0:6 ip6 dscp set cs6 comment \"Set CoS value to 6 for DHCPv6 packets\""
+nft insert "rule netdev filter egress icmpv6 type { nd-router-solicit, nd-neighbor-solicit } meta priority set 0:6 ip6 dscp set cs6 comment \"Set CoS value to 6 for RS/RA packets\""
+
+echo "Injecting PCP 6 / 802.1Q prio 6 on egress DHCP packet [iface: $IFACE]"
+```
+
 ### Interface configuration
 
 `nano /etc/network/interfaces.d/wan`
@@ -257,31 +279,36 @@ iface vlan832 inet manual
         # Wait for ONU to be UP
         up /etc/network/wait_for_wan wan
 
+        # Reload NFTable
+        up nft -f /etc/nftables.conf
+
+        # Add nftable PCP 6 / 802.1Q prio 6 on egress DHCPv4/v6 packet
+        up /etc/network/inject_pcp_6
+
+        # Add nftable fastpath rules
+        # Uncomment if you want to use flowtable fastpath
+        #up /etc/network/inject_flowtable_fastpath
+
         # Generate Orange Options (user-class, vendor-class, option 90)
         up /etc/dhcp/dhclient-orange-generator
 
-        # Egress prio 6:6
+        # Egress prio 6:6 (aka VLAN-PCP)
         up ip l s $IFACE type vlan egress 6:6
-
-        # CGroup Up
-        up mkdir -p /sys/fs/cgroup/net_prio && mount -t cgroup -o net_prio net_prio /sys/fs/cgroup/net_prio 2>/dev/null || true
-        up cgcreate -g net_prio:dhcp-orange
-        up cgset -r "net_prio.ifpriomap=$IFACE 6" dhcp-orange
+        up sleep 2
 
         # DHCP Up
-        up cgexec -g net_prio:dhcp-orange --sticky -- dhclient -4 -i $IFACE -cf /etc/dhcp/dhclient-orange-v4.conf -df /var/lib/dhcp/dhclient-orange-v4.duid -lf /var/lib/dhcp/dhclient-orange-v4.lease -v
+        up dhclient -4 -i $IFACE -cf /etc/dhcp/dhclient-orange-v4.conf -df /var/lib/dhcp/dhclient-orange-v4.duid -lf /var/lib/dhcp/dhclient-orange-v4.lease -v
         up sleep 2
-        up cgexec -g net_prio:dhcp-orange --sticky -- dhclient -6 -P -D LL -i $IFACE -cf /etc/dhcp/dhclient-orange-v6.conf -df /var/lib/dhcp/dhclient-orange-v6.duid -lf /var/lib/dhcp/dhclient-orange-v6.lease -e interface_internal="$IFACE:01 lan:02" -v
+        up dhclient -6 -P -D LL -i $IFACE -cf /etc/dhcp/dhclient-orange-v6.conf -df /var/lib/dhcp/dhclient-orange-v6.duid -lf /var/lib/dhcp/dhclient-orange-v6.lease -e interface_internal="$IFACE:01 lan:02" -v
 
         # DHCP Down
-        down cgexec -g net_prio:dhcp-orange --sticky -- dhclient -6 -P -D LL -i $IFACE -cf /etc/dhcp/dhclient-orange-v6.conf -df /var/lib/dhcp/dhclient-orange-v6.duid -lf /var/lib/dhcp/dhclient-orange-v6.lease -e interface_internal="$IFACE:01 lan:02" -v -r
+        down dhclient -6 -P -D LL -i $IFACE -cf /etc/dhcp/dhclient-orange-v6.conf -df /var/lib/dhcp/dhclient-orange-v6.duid -lf /var/lib/dhcp/dhclient-orange-v6.lease -e interface_internal="$IFACE:01 lan:02" -v -r
         down sleep 2
-        down cgexec -g net_prio:dhcp-orange --sticky -- dhclient -4 -i $IFACE -cf /etc/dhcp/dhclient-orange-v4.conf -df /var/lib/dhcp/dhclient-orange-v4.duid -lf /var/lib/dhcp/dhclient-orange-v4.lease -v -r
-
-        # CGroup down
-        down cgdelete -g net_prio:dhcp-orange
-        down umount /sys/fs/cgroup/net_prio 2>/dev/null || true
+        down dhclient -4 -i $IFACE -cf /etc/dhcp/dhclient-orange-v4.conf -df /var/lib/dhcp/dhclient-orange-v4.duid -lf /var/lib/dhcp/dhclient-orange-v4.lease -v -r
 ```
 
 {: .important }
 > Replace `xx:xx:xx:xx:xx:xx` with the Livebox mac address.
+
+{: .info }
+> Uncomment `#up /etc/network/inject_flowtable_fastpath` if you want to use flowtable fastpath.

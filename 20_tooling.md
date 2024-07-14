@@ -10,7 +10,7 @@ has_toc: false
 
 ## Necessary packages
 
-`apt install htop rsyslog ethtool tcpdump conntrack net-tools iproute2 vlan cgroup-tools isc-dhcp-server radvd`
+`apt install htop rsyslog ethtool tcpdump conntrack net-tools iproute2 vlan isc-dhcp-server radvd`
 
 ## Plymouth (Optional)
 

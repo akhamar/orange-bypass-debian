@@ -145,9 +145,6 @@ table ip6 filter6 {
 ```bash
 #!/bin/bash
 
-# Reload nftable
-nft -f /etc/nftables.conf
-
 # Add flowtable fastpath
 nft add "flowtable ip filter4 fastpath { hook ingress priority 0; devices = { lan, vlan832 }; }"
 nft add "flowtable ip6 filter6 fastpath { hook ingress priority 0; devices = { lan, vlan832 }; }"
