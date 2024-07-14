@@ -22,6 +22,9 @@ nft monitor trace
 
 ## DHCP
 
+{: .info }
+> To make tcmdump whireshark capture or pcap, just add `-w file_name` at the end of each tcpdump command.
+
 ### DHCP Request / Offer
 ```bash
 tcpdump -i <X_IFACE_NAME_X> port 67 or port 68 -e -n -v
@@ -50,3 +53,21 @@ tcpdump -vvvvv -ttt -i wan 'icmp6 and (ip6[40] = 134 or ip6[40] = 133 or ip6[40]
 - router-advertisement: 134
 - neighbor-solicitation: 135
 - neighbor-advertisement: 136
+
+### Correct results
+
+#### ARP
+
+[image](https://raw.githubusercontent.com/akhamar/orange-bypass-debian/main/assets/images/arp.png)
+
+#### DHCP V4
+
+[image](https://raw.githubusercontent.com/akhamar/orange-bypass-debian/main/assets/images/dhcp4.png)
+
+#### DHCP V6
+
+[image](https://raw.githubusercontent.com/akhamar/orange-bypass-debian/main/assets/images/dhcp6.png)
+
+#### ICMP6 Router solicitation & Neighbor solicitation
+
+[image](https://raw.githubusercontent.com/akhamar/orange-bypass-debian/main/assets/images/icmp6_ra_rs.png)
