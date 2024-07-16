@@ -210,7 +210,7 @@ nft insert "rule netdev filter egress ether type arp meta priority set 0:6 comme
 
 # IPV6
 nft insert "rule netdev filter egress udp dport 547 meta priority set 0:6 ip6 dscp set cs6 comment \"Set CoS value to 6 for DHCPv6 packets\""
-nft insert "rule netdev filter egress icmpv6 type { nd-router-solicit, nd-neighbor-solicit } meta priority set 0:6 ip6 dscp set cs6 comment \"Set CoS value to 6 for RS/RA packets\""
+nft insert "rule netdev filter egress icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } meta priority set 0:6 ip6 dscp set cs6 comment \"Set CoS value to 6 for RS/NS/NA packets\""
 
 echo "Injecting PCP 6 / 802.1Q prio 6 on egress DHCP packet [iface: $IFACE]"
 ```
