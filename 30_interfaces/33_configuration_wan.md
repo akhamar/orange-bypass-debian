@@ -18,8 +18,8 @@ has_toc: false
 ```bash
 #!/bin/bash
 
-LOGIN='fti/XXXXXX'
-PASSWORD='YYYYYY'
+LOGIN='fti/XXXXXXX'
+PASSWORD='YYYYYYY'
 LIVEBOX_VERSION=5
 LIVEBOX_HARDWARE='sagem'
 
@@ -34,7 +34,7 @@ addsep() {
 
 r=$(dd if=/dev/urandom bs=1k count=1 2>&1 | md5sum | cut -c1-16)
 id=${r:0:1}
-h=3C12$(tohex ${r})0313$(tohex ${id})$(echo -n ${id}${PASSWORD}${r} | md5sum | cut -c1-32)
+h=3c12$(tohex ${r})0313$(tohex ${id})$(echo -n ${id}${PASSWORD}${r} | md5sum | cut -c1-32)
 
 # vendor class
 export VENDOR_CLASS_IDENTIFIER_4=${LIVEBOX_HARDWARE}
@@ -56,7 +56,7 @@ envsubst < /etc/dhcp/dhclient-orange-v6.conf.template > /etc/dhcp/dhclient-orang
 ```
 
 {: .important }
-> Replace `XXXXXX`, `YYYYYY`, `Livebox version` and `Livebox hardware` with the proper values.
+> Replace `XXXXXXX`, `YYYYYYY`, `Livebox version` and `Livebox hardware` with the proper values.
 
 `chmod 750 /etc/dhcp/dhclient-orange-generator`
 
