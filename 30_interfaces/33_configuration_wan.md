@@ -158,6 +158,11 @@ fi
 
 ### Wait for ONU Up link
 
+{: .info }
+> There is two version of the `wait for wan` script. The first version is for the ONU inserted directly in the NIC of the router. The second version is when you put a switch in between the router and the ONU.
+
+#### First version - ONU directly inserted in the NIC
+
 `nano /etc/network/wait_for_wan`
 
 ```bash
@@ -180,6 +185,43 @@ fi
 # We wait until 'Laser output power' is greater than 0
 echo "Waiting for ONU to be UP and running"
 until [[ $(ethtool -m $IFACE | grep -E 'Laser output power\s+:' | awk '{print $(NF - 1)}' | cut -d'.' -f1) -gt 0 ]]
+do
+        sleep 2
+        if [[ $SECONDS -ge $TIMEOUT ]]
+        then
+                echo "Timeout ($TIMEOUT second) waiting for ONU module to be UP"
+                exit 1
+        fi
+done
+echo "ONU UP and running"
+```
+
+`chmod 750 /etc/network/wait_for_wan`
+
+#### Second version - ONU inserted in a switch with a link between the switch and the NIC
+
+`nano /etc/network/wait_for_wan`
+
+```bash
+#!/bin/bash
+
+IFACE=$1
+TIMEOUT=$2
+
+if [[ -z $IFACE ]]
+then
+        echo "IFACE need to be set"
+        exit 1
+fi
+
+if [[ -z $TIMEOUT ]]
+then
+        TIMEOUT=180
+fi
+
+# We wait until the IFACE show as UP
+echo "Waiting for ONU to be UP and running"
+until ip addr show $IFACE | grep -q "state UP"
 do
         sleep 2
         if [[ $SECONDS -ge $TIMEOUT ]]
