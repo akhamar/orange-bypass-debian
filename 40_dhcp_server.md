@@ -54,9 +54,6 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
   option domain-name "aaaa.bbbb.cc";
   option domain-search "aaaa.bbbb.cc";
   option domain-name-servers 192.168.1.xxx;
-
-  # MTU 9000 (optional)
-  #option mtu-flag 9000;
 }
 
 
@@ -109,12 +106,12 @@ update-conflict-detection false;
 authoritative;
 
 # Subnet
-subnet6 ${IPV6_DELEGATION_64}::/64 {
+subnet6 ${IPV6_DELEGATION_56}02::/64 {
   # Invite pool range
-  range6 ${IPV6_DELEGATION_64}::aaaa ${IPV6_DELEGATION_64}::bbbb;
+  range6 ${IPV6_DELEGATION_56}02::aaaa ${IPV6_DELEGATION_56}02::bbbb;
 
   # DNS
-  option dhcp6.name-servers ${IPV6_DELEGATION_64}::dddd;
+  option dhcp6.name-servers ${IPV6_DELEGATION_56}02::dddd;
 }
 
 ddns-update-style none;
@@ -126,13 +123,13 @@ ddns-update-style none;
 # XXXXXX
 host XXXXXX {
   host-identifier option dhcp6.client-id xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx;
-  fixed-address6 ${IPV6_DELEGATION_64}::eeee;
+  fixed-address6 ${IPV6_DELEGATION_56}02::eeee;
 }
 
 # YYYYYY
 host YYYYYY {
   host-identifier option dhcp6.client-id xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx;
-  fixed-address6 ${IPV6_DELEGATION_64}::ffff;
+  fixed-address6 ${IPV6_DELEGATION_56}02::ffff;
 }
 
 ...

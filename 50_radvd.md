@@ -8,7 +8,7 @@ has_toc: false
 
 # RADVD
 
-`nano /etc/radvd.conf`
+`nano /etc/radvd.conf.template`
 
 ```bash
 # LAN
@@ -30,7 +30,7 @@ interface lan {
         # Hosts use the administered (stateful) protocol for autoconfiguration of other (non-address) information
         AdvOtherConfigFlag on;
 
-        prefix ::/64 {
+        prefix ${IPV6_DELEGATION_56}02::/64 {
                 DeprecatePrefix on;
                 # When set, indicates that this prefix can be used for on-link determination
                 AdvOnLink on;
@@ -38,13 +38,21 @@ interface lan {
                 AdvAutonomous off;
         };
 
-        # Broadcast DNS server
-        RDNSS xxxx:xxxx:xxxx::xxxx xxxx:xxxx:xxxx::xxxx {
+        prefix ${IPV6_DELEGATION_56}03::/64 {
+                DeprecatePrefix on;
+                # When set, indicates that this prefix can be used for on-link determination
+                AdvOnLink on;
+                # When set, indicates that this prefix can be used for autonomous address configuration as specified in RFC 4862.
+                AdvAutonomous on;
         };
 
+        # Broadcast DNS server
+        #RDNSS xxxx:xxxx:xxxx::xxxx xxxx:xxxx:xxxx::xxxx {
+        #};
+
         # Broadcast domain
-        DNSSL aaaa.bbbb.cc {
-        };
+        #DNSSL aaaa.bbbb.cc {
+        #};
 
 };
 ```

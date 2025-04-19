@@ -21,8 +21,13 @@ has_toc: false
 
 flush ruleset
 
+# Subnets
 define LAN_IPV4_SUBNET  = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
-define LAN_IPV6_SUBNET  = { xxxx:xxxx:xxxx:xxxx::/64 }
+define LAN_IPV6_SUBNET  = { xxxx:xxxx:xxxx:xx02::/64, xxxx:xxxx:xxxx:xx03::/64 }
+
+# IFace
+define WAN_IFACE        = { "vlan832" }
+define LAN_IFACE        = { "lan" }
 
 # NAT
 table ip nat {
@@ -33,23 +38,23 @@ table ip nat {
                 #############################################
                 # Example Forward
                 # WAN(80/443) => IP LAN(80/443)
-                #iifname "vlan832" tcp dport { http, https } dnat to 192.168.1.xxx comment "Web Redirect"
+                #iifname $WAN_IFACE tcp dport { http, https } dnat to 192.168.1.xxx comment "Web Redirect"
         }
 
         chain input {
                 type nat hook input priority 0; policy accept;
-                #counter comment "count accepted packets"
+                #counter comment "nat.input accepted"
         }
 
         chain output {
                 type nat hook output priority 0; policy accept;
-                #counter comment "count accepted packets"
+                #counter comment "nat.output accepted"
         }
 
         chain postrouting {
                 type nat hook postrouting priority 0; policy accept;
 
-                oifname "vlan832" masquerade;
+                oifname $WAN_IFACE masquerade;
 
                 #counter comment "count accepted packets"
                 #counter log prefix "nft#nat: "
@@ -64,14 +69,14 @@ table ip filter {
                 type filter hook input priority filter; policy drop;
                 iif lo accept
                 ct state { related, established } accept
-                iifname "lan" ip saddr $LAN_IPV4_SUBNET accept                  # From LAN to WAN
+                iifname $LAN_IFACE ip saddr $LAN_IPV4_SUBNET accept                  # From LAN Subnet on LAN IFace (Accept)
         }
         chain forward {
                 type filter hook forward priority filter; policy drop;
                 ct state { related, established } accept
                 ct state invalid drop
-                iifname "lan" ct state new accept                               # From LAN to WAN (NAT)
-                oifname "lan" ip daddr $LAN_IPV4_SUBNET accept                  # From WAN to LAN
+                iifname $LAN_IFACE ct state new accept                               # From LAN to WAN (NAT)
+                oifname $LAN_IFACE ip daddr $LAN_IPV4_SUBNET accept                  # From WAN to LAN
         }
         chain output {
                 type filter hook output priority filter; policy accept;
@@ -85,18 +90,18 @@ table ip6 filter {
                 type filter hook input priority filter; policy drop;
                 iif lo accept
                 ct state { related, established } accept
-                iifname "lan" ip6 saddr fe80::/64 accept                                                                                        # Accept ip6 local
-                iifname "lan" ip6 saddr $LAN_IPV6_SUBNET accept                                                                                 # Accept ip6 subnet
+                iifname $LAN_IFACE ip6 saddr fe80::/64 accept                                                                                        # From LAN Subnet on LAN IFace (Accept)
+                iifname $LAN_IFACE ip6 saddr $LAN_IPV6_SUBNET accept                                                                                 # From LAN Subnet on LAN IFace (Accept)
 
                 # Orange Advert & Solicit
-                iifname "vlan832" ip6 daddr fe80::/64 udp dport { 546 } accept                                                                  # Accept Orange DHCP Advertise & Reply
-                iifname "vlan832" icmpv6 type { nd-neighbor-solicit, nd-router-advert, nd-neighbor-advert } accept                              # Solicit, Advert from Orange on WAN
+                iifname $WAN_IFACE ip6 daddr fe80::/64 udp dport { 546 } accept                                                                  # Accept Orange DHCP Advertise & Reply
+                iifname $WAN_IFACE icmpv6 type { nd-neighbor-solicit, nd-router-advert, nd-neighbor-advert } accept                              # Solicit, Advert from Orange on WAN
         }
         chain forward {
                 type filter hook forward priority filter; policy drop;
                 ct state { related, established } accept
                 ct state invalid drop
-                iifname "lan" ct state new accept
+                iifname $LAN_IFACE ct state new accept
 
                 #############################################
                 # Example IPV6 Filtering
