@@ -120,6 +120,12 @@ RUN="yes"
 
 if [ "$RUN" = "yes" ] && [ -n "$new_ip6_prefix" ] && [ -n "$interface_internal" ]
 then
+
+        # Flush all ip on interface
+        interface_selection=$(echo "$interface_internal" | awk '{print $2}' | awk -F ':' '{print $1}')
+        ip -family inet6 address flush dev "$interface_selection" scope global
+
+        # Compute prefix
         prefix="${new_ip6_prefix%00::/*}"
         for interface_index in $interface_internal
         do
@@ -135,17 +141,29 @@ then
                 echo "| ipv6:   $prefix$index::1/64"
                 echo "========================="
 
-                ip -family inet6 address flush dev "$interface" scope global
                 ip -family inet6 address add "$prefix$index::1/64" dev "$interface"
 
                 # Automatically associate a subnet6 corresponding to lan IVP6 address subnet
-                if [ "$interface" = "lan" ] && [ -f /etc/dhcp/dhcpd6.conf.template ]
+                # DHCPD6
+                if [ "$interface" = "lan" ] && [ "$index" = "02" ] && [ -f /etc/dhcp/dhcpd6.conf.template ]
                 then
                         export IPV6_DELEGATION_64=$prefix$index
+                        export IPV6_DELEGATION_56=$prefix
                         echo ""
                         echo "*************************"
-                        echo "* Configuring isch-dhcp-server IPV6 delegation for subnet6=$IPV6_DELEGATION_64"
+                        echo "* Configuring isch-dhcp-server IPV6 delegation for subnet6=${IPV6_DELEGATION_56}${index}::/64"
                         envsubst < /etc/dhcp/dhcpd6.conf.template > /etc/dhcp/dhcpd6.conf
+                fi
+
+                # RADVD
+                if [ "$interface" = "lan" ] && [ "$index" = "03" ] && [ -f /etc/radvd.conf.template ]
+                then
+                        export IPV6_DELEGATION_64=$prefix$index
+                        export IPV6_DELEGATION_56=$prefix
+                        echo ""
+                        echo "*************************"
+                        echo "* Configuring radvd SLAAC IPV6 delegation for subnet6=${IPV6_DELEGATION_56}XX::/64"
+                        envsubst < /etc/radvd.conf.template > /etc/radvd.conf
                 fi
         done
 fi
@@ -301,10 +319,10 @@ iface vlan832 inet manual
         # DHCP Up
         up dhclient -4 -i $IFACE -cf /etc/dhcp/dhclient-orange-v4.conf -df /var/lib/dhcp/dhclient-orange-v4.duid -lf /var/lib/dhcp/dhclient-orange-v4.lease -v
         up sleep 2
-        up dhclient -6 -P -D LL -i $IFACE -cf /etc/dhcp/dhclient-orange-v6.conf -df /var/lib/dhcp/dhclient-orange-v6.duid -lf /var/lib/dhcp/dhclient-orange-v6.lease -e interface_internal="$IFACE:01 lan:02" -v
+        up dhclient -6 -P -D LL -i $IFACE -cf /etc/dhcp/dhclient-orange-v6.conf -df /var/lib/dhcp/dhclient-orange-v6.duid -lf /var/lib/dhcp/dhclient-orange-v6.lease -e interface_internal="$IFACE:01 lan:02 lan:03" -v
 
         # DHCP Down
-        down dhclient -6 -P -D LL -i $IFACE -cf /etc/dhcp/dhclient-orange-v6.conf -df /var/lib/dhcp/dhclient-orange-v6.duid -lf /var/lib/dhcp/dhclient-orange-v6.lease -e interface_internal="$IFACE:01 lan:02" -v -r
+        down dhclient -6 -P -D LL -i $IFACE -cf /etc/dhcp/dhclient-orange-v6.conf -df /var/lib/dhcp/dhclient-orange-v6.duid -lf /var/lib/dhcp/dhclient-orange-v6.lease -e interface_internal="$IFACE:01 lan:02 lan:03" -v -r
         down sleep 2
         down dhclient -4 -i $IFACE -cf /etc/dhcp/dhclient-orange-v4.conf -df /var/lib/dhcp/dhclient-orange-v4.duid -lf /var/lib/dhcp/dhclient-orange-v4.lease -v -r
 ```

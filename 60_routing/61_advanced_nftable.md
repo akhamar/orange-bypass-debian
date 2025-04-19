@@ -26,7 +26,7 @@ flush ruleset
 
 # Subnets
 define LAN_IPV4_SUBNET  = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
-define LAN_IPV6_SUBNET  = { xxxx:xxxx:xxxx:xxxx::/64 }
+define LAN_IPV6_SUBNET  = { xxxx:xxxx:xxxx:xx02::/64, xxxx:xxxx:xxxx:xx03::/64 }
 define VPN_IPV4_SUBNET  = { xxx.xxx.xxx.xxx/xx, xxx.xxx.xxx.xxx/xx }
 
 # IFace
