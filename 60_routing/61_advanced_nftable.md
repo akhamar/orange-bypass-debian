@@ -35,8 +35,8 @@ define LAN_IFACE        = { "lan" }     # { "lan1", "lan2", "lanN" }
 define VPN_IFACE        = { "xxxxx_vpn1_ifacename_xxxxx0", "xxxxx_vpn2_ifacename_xxxxx0" }
 
 # Hosts
-define IPV4_HOST_1     = { xxx.xxx.xxx.xxx }
-define IPV6_HOST_1     = { xxxx:xxxx:xxxx:xxxx::xxxx/128 }
+define IPV4_HOST_1     = xxx.xxx.xxx.xxx/32
+define IPV6_HOST_1     = xxxx:xxxx:xxxx:xxxx::xxxx/128
 
 # NAT
 table ip nat {

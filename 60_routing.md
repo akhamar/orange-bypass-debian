@@ -231,7 +231,7 @@ echo "chain trace removed"
 
 ## IP forward
 
-`nano /etc/sysctl.conf`
+`nano /etc/sysctl.d/ra.conf`
 
 ```
 # IP forwarding (IPV4 / IPV6)
