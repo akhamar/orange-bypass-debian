@@ -275,6 +275,8 @@ nft insert "rule netdev filter egress icmpv6 type { nd-router-solicit, nd-neighb
 echo "Injecting PCP 6 / 802.1Q prio 6 on egress DHCP packet [iface: $IFACE]"
 ```
 
+`chmod 750 /etc/network/inject_pcp_6`
+
 ### Interface configuration
 
 `nano /etc/network/interfaces.d/wan`
