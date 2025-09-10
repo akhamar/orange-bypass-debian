@@ -26,6 +26,7 @@ define LAN_IPV4_SUBNET  = { 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 }
 define LAN_IPV6_SUBNET  = { xxxx:xxxx:xxxx:xx02::/64, xxxx:xxxx:xxxx:xx03::/64 }
 
 # IFace
+define HARD_WAN_IFACE   = "wan"
 define WAN_IFACE        = { "vlan832" }
 define LAN_IFACE        = { "lan" }
 
@@ -111,6 +112,24 @@ table ip6 filter {
         }
         chain output {
                 type filter hook output priority filter; policy accept;
+        }
+}
+
+
+# Handling COS6 (802.1Q prio 6) and DSCP cs6 for Orange
+table netdev filter {
+        chain vlan_832_rules {
+                # IPV4
+                udp dport 67 vlan pcp set 6 ip dscp set cs6 counter comment "Set CoS value to 6 for DHCPv4 packets"
+                vlan type arp vlan pcp set 6 counter comment "Set CoS value to 6 for arp packets"
+
+                # IPV6
+               udp dport 547 vlan pcp set 6 ip6 dscp set cs6 counter comment "Set CoS value to 6 for DHCPv6 packets"
+                icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } vlan pcp set 6 ip6 dscp set cs6 counter comment "Set CoS value to 6 for DHCPv6 packets"
+        }
+        chain egress {
+                type filter hook egress device $HARD_WAN_IFACE priority filter; policy accept;
+                vlan id 832 jump vlan_832_rules
         }
 }
 ```

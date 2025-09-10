@@ -253,30 +253,6 @@ echo "ONU UP and running"
 
 `chmod 750 /etc/network/wait_for_wan`
 
-### Handling COS6 (802.1Q prio 6) and DSCP cs6 for Orange
-
-`nano /etc/network/inject_pcp_6`
-
-```bash
-#!/bin/bash
-
-# Add PCP 6 (802.1Q prio 6)
-nft add "table netdev filter"
-nft add "chain netdev filter egress { type filter hook egress device $IFACE priority 0; }"
-
-# IPV4
-nft insert "rule netdev filter egress udp dport 67 meta priority set 0:6 ip dscp set cs6 comment \"Set CoS value to 6 for DHCPv4 packets\""
-nft insert "rule netdev filter egress ether type arp meta priority set 0:6 comment \"Set CoS value to 6 for arp packets\""
-
-# IPV6
-nft insert "rule netdev filter egress udp dport 547 meta priority set 0:6 ip6 dscp set cs6 comment \"Set CoS value to 6 for DHCPv6 packets\""
-nft insert "rule netdev filter egress icmpv6 type { nd-router-solicit, nd-neighbor-solicit, nd-neighbor-advert } meta priority set 0:6 ip6 dscp set cs6 comment \"Set CoS value to 6 for RS/NS/NA packets\""
-
-echo "Injecting PCP 6 / 802.1Q prio 6 on egress DHCP packet [iface: $IFACE]"
-```
-
-`chmod 750 /etc/network/inject_pcp_6`
-
 ### Interface configuration
 
 `nano /etc/network/interfaces.d/wan`
@@ -304,19 +280,12 @@ iface vlan832 inet manual
         # Reload NFTable
         up nft -f /etc/nftables.conf
 
-        # Add nftable PCP 6 / 802.1Q prio 6 on egress DHCPv4/v6 packet
-        up /etc/network/inject_pcp_6
-
         # Add nftable fastpath rules
         # Uncomment if you want to use flowtable fastpath
         #up /etc/network/inject_flowtable_fastpath
 
         # Generate Orange Options (user-class, vendor-class, option 90)
         up /etc/dhcp/dhclient-orange-generator
-
-        # Egress prio 6:6 (aka VLAN-PCP)
-        up ip l s $IFACE type vlan egress 6:6
-        up sleep 2
 
         # DHCP Up
         up dhclient -4 -i $IFACE -cf /etc/dhcp/dhclient-orange-v4.conf -df /var/lib/dhcp/dhclient-orange-v4.duid -lf /var/lib/dhcp/dhclient-orange-v4.lease -v
